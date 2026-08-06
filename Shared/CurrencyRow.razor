@@ -7,10 +7,10 @@
     </button>
     <span class="code">@Slot.Code</span>
     <input class="amount-input"
-           inputmode="decimal"
+           inputmode="none"
+           readonly
            value="@Slot.Text"
-           @onclick="Activate"
-           @oninput="HandleInput" />
+           @onclick="Activate" />
 </div>
 
 @code {
@@ -27,10 +27,4 @@
     private string FlagCountry => CurrencyCatalog.Find(Slot.Code)?.FlagCountry ?? "xx";
 
     private void Activate() => AppState.SetActive(Index);
-
-    private void HandleInput(ChangeEventArgs e)
-    {
-        Activate();
-        AppState.SetActiveBufferFromInput(e.Value?.ToString() ?? "");
-    }
 }

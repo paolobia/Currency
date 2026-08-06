@@ -85,8 +85,6 @@ public sealed class AppStateService(
 
     public void ClearActive() => SetActiveBuffer("");
 
-    public void SetActiveBufferFromInput(string raw) => SetActiveBuffer(NumberFormatter.SanitizeBuffer(raw));
-
     private void SetActiveBuffer(string sanitizedRaw)
     {
         var active = Slots[ActiveIndex];
