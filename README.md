@@ -1,5 +1,7 @@
 # Cambio Valute
 
+🔗 **App live:** [paolobia.github.io/Currency](https://paolobia.github.io/Currency/)
+
 Convertitore di valute in tempo reale, pensato per l'uso da smartphone: 5 righe di valuta convertibili tra loro all'istante, tastierino numerico stile calcolatrice, tabellina di conversione 1-100 e selettore valuta con ricerca (150+ valute, bandiera reale per ciascuna).
 
 App **Blazor WebAssembly (.NET 8)**, 100% client-side — nessun backend, installabile come **PWA** su Android, iOS e desktop.
