@@ -125,7 +125,7 @@ html, body {
 
 .keypad {
     position: relative;
-    background: linear-gradient(180deg, #d7d7d7, #a9a9a9);
+    background: transparent;
     padding: 20px 10px 16px;
     display: grid;
     grid-template-columns: 1.3fr 1fr 1fr 1fr;
@@ -147,7 +147,7 @@ html, body {
     width: 60px;
     height: 5px;
     border-radius: 3px;
-    background: rgba(0, 0, 0, .25);
+    background: rgba(255, 255, 255, .25);
 }
 
 .key {
