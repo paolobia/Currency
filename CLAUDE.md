@@ -1,6 +1,6 @@
 # Currency
 
-App Blazor WebAssembly (.NET 8, no ASP.NET host) per convertire valute in tempo reale — pensata per l'uso da smartphone (5 righe di valuta + tastierino numerico stile calcolatrice, vedi `dialog.png` per il mockup di riferimento).
+App Blazor WebAssembly (.NET 8, no ASP.NET host) per convertire valute in tempo reale — pensata per l'uso da smartphone (5 righe di valuta + tastierino numerico stile calcolatrice, vedi `wwwroot/screenshot.png` per uno screenshot aggiornato).
 
 ## Come si avvia
 
