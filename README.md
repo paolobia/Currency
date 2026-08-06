@@ -4,7 +4,7 @@ Convertitore di valute in tempo reale, pensato per l'uso da smartphone: 5 righe 
 
 App **Blazor WebAssembly (.NET 8)**, 100% client-side — nessun backend, installabile come **PWA** su Android, iOS e desktop.
 
-![Mockup](dialog.png)
+<img src="wwwroot/screenshot.png" alt="Schermata dell'app" width="320" />
 
 ## Funzionalità
 
