@@ -1,0 +1,36 @@
+@inject AppStateService AppState
+
+<div class="currency-row @(IsActive ? "active" : "")">
+    <button type="button" class="flag-btn" @onclick="() => OnFlagClick.InvokeAsync(Index)">
+        <img class="flag" src="flags/@(FlagCountry).svg" alt="" />
+        <span class="caret">▾</span>
+    </button>
+    <span class="code">@Slot.Code</span>
+    <input class="amount-input"
+           inputmode="decimal"
+           value="@Slot.Text"
+           @onclick="Activate"
+           @oninput="HandleInput" />
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public int Index { get; set; }
+
+    [Parameter]
+    public EventCallback<int> OnFlagClick { get; set; }
+
+    private CurrencySlot Slot => AppState.Slots[Index];
+
+    private bool IsActive => AppState.ActiveIndex == Index;
+
+    private string FlagCountry => CurrencyCatalog.Find(Slot.Code)?.FlagCountry ?? "xx";
+
+    private void Activate() => AppState.SetActive(Index);
+
+    private void HandleInput(ChangeEventArgs e)
+    {
+        Activate();
+        AppState.SetActiveBufferFromInput(e.Value?.ToString() ?? "");
+    }
+}

@@ -1,0 +1,34 @@
+@inject AppStateService AppState
+
+<div class="keypad">
+    <button type="button" class="key key-clear area-c" @onclick="Clear">C</button>
+    <button type="button" class="key area-d7" @onclick="() => Digit('7')">7</button>
+    <button type="button" class="key area-d8" @onclick="() => Digit('8')">8</button>
+    <button type="button" class="key area-d9" @onclick="() => Digit('9')">9</button>
+
+    <button type="button" class="key key-refresh area-refresh" title="Aggiorna cambi" @onclick="Refresh">⟳</button>
+    <button type="button" class="key area-d4" @onclick="() => Digit('4')">4</button>
+    <button type="button" class="key area-d5" @onclick="() => Digit('5')">5</button>
+    <button type="button" class="key area-d6" @onclick="() => Digit('6')">6</button>
+
+    <button type="button" class="key key-grid area-grid" @onclick="OpenGrid">Tabellina<br />da 1 a 100</button>
+    <button type="button" class="key area-d1" @onclick="() => Digit('1')">1</button>
+    <button type="button" class="key area-d2" @onclick="() => Digit('2')">2</button>
+    <button type="button" class="key area-d3" @onclick="() => Digit('3')">3</button>
+
+    <button type="button" class="key area-d0" @onclick="() => Digit('0')">0</button>
+    <button type="button" class="key area-comma" @onclick="Comma">,</button>
+    <button type="button" class="key key-backspace area-back" @onclick="Backspace">⌫</button>
+</div>
+
+@code {
+    [Parameter]
+    public EventCallback OnOpenGrid { get; set; }
+
+    private void Digit(char d) => AppState.AppendDigit(d);
+    private void Comma() => AppState.AppendComma();
+    private void Backspace() => AppState.Backspace();
+    private void Clear() => AppState.ClearActive();
+    private async Task Refresh() => await AppState.RefreshRatesAsync();
+    private async Task OpenGrid() => await OnOpenGrid.InvokeAsync();
+}

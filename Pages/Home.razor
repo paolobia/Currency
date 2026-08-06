@@ -1,0 +1,54 @@
+@page "/"
+@implements IDisposable
+@inject AppStateService AppState
+
+<PageTitle>Cambio Valute</PageTitle>
+
+<div class="app">
+    @if (!AppState.IsInitialized)
+    {
+        <div class="loading">Caricamento…</div>
+    }
+    else
+    {
+        <div class="rows">
+            @for (var i = 0; i < AppState.Slots.Length; i++)
+            {
+                <CurrencyRow Index="i" OnFlagClick="OpenPicker" />
+            }
+        </div>
+
+        <KeyPad OnOpenGrid="OpenGrid" />
+    }
+</div>
+
+<CurrencyPickerDialog IsOpen="pickerOpen" TargetIndex="pickerIndex" OnClose="ClosePicker" />
+<ConversionGridDialog IsOpen="gridOpen" OnClose="CloseGrid" />
+
+@code {
+    private bool pickerOpen;
+    private int pickerIndex;
+    private bool gridOpen;
+
+    protected override async Task OnInitializedAsync()
+    {
+        AppState.OnChange += HandleChange;
+        await AppState.InitializeAsync();
+    }
+
+    private void HandleChange() => InvokeAsync(StateHasChanged);
+
+    private void OpenPicker(int index)
+    {
+        pickerIndex = index;
+        pickerOpen = true;
+    }
+
+    private void ClosePicker() => pickerOpen = false;
+
+    private void OpenGrid() => gridOpen = true;
+
+    private void CloseGrid() => gridOpen = false;
+
+    public void Dispose() => AppState.OnChange -= HandleChange;
+}

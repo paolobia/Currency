@@ -1,0 +1,57 @@
+@inject AppStateService AppState
+
+@if (IsOpen)
+{
+    <div class="dialog-backdrop" @onclick="Close">
+        <div class="dialog-card" @onclick:stopPropagation="true">
+            <div class="dialog-header">
+                <input class="search-box"
+                       placeholder="Cerca codice o nome (es. USD)"
+                       value="@query"
+                       @oninput="OnQueryChanged"
+                       autofocus />
+                <button type="button" class="dialog-close" @onclick="Close">✕</button>
+            </div>
+            <div class="dialog-list">
+                @foreach (var c in Results)
+                {
+                    <button type="button" class="currency-option" @onclick="() => Select(c)">
+                        <img class="flag" src="flags/@(c.FlagCountry).svg" alt="" />
+                        <span class="opt-code">@c.Code</span>
+                        <span class="opt-name">@c.Name</span>
+                    </button>
+                }
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public bool IsOpen { get; set; }
+
+    [Parameter]
+    public int TargetIndex { get; set; }
+
+    [Parameter]
+    public EventCallback OnClose { get; set; }
+
+    private string query = "";
+
+    private IEnumerable<CurrencyInfo> Results => CurrencyCatalog.Search(query);
+
+    private void OnQueryChanged(ChangeEventArgs e) => query = e.Value?.ToString() ?? "";
+
+    private async Task Select(CurrencyInfo info)
+    {
+        await AppState.SetSlotCurrencyAsync(TargetIndex, info.Code);
+        query = "";
+        await OnClose.InvokeAsync();
+    }
+
+    private async Task Close()
+    {
+        query = "";
+        await OnClose.InvokeAsync();
+    }
+}

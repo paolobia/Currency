@@ -1,0 +1,36 @@
+@inject AppStateService AppState
+
+@if (IsOpen)
+{
+    <div class="dialog-backdrop" @onclick="Close">
+        <div class="dialog-card" @onclick:stopPropagation="true">
+            <div class="dialog-header">
+                <span class="grid-title">@FromCode → @ToCode</span>
+                <button type="button" class="dialog-close" @onclick="Close">✕</button>
+            </div>
+            <div class="dialog-list grid-list">
+                @for (var n = 1; n <= 100; n++)
+                {
+                    <div class="grid-row @(n % 10 == 0 ? "grid-row-tens" : "")">
+                        <span class="grid-left">@n @FromCode</span>
+                        <span class="grid-eq">=</span>
+                        <span class="grid-right">@NumberFormatter.FormatFixed(AppState.ConvertAmount(n, FromCode, ToCode)) @ToCode</span>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public bool IsOpen { get; set; }
+
+    [Parameter]
+    public EventCallback OnClose { get; set; }
+
+    private string FromCode => AppState.Slots[AppState.ActiveIndex].Code;
+    private string ToCode => AppState.Slots[AppState.ActiveIndex == 0 ? 1 : 0].Code;
+
+    private async Task Close() => await OnClose.InvokeAsync();
+}
