@@ -1,0 +1,30 @@
+{
+  "name": "Cambio Valute",
+  "short_name": "Cambio Valute",
+  "id": "/",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#20242a",
+  "theme_color": "#0e0e0e",
+  "description": "Convertitore di valute rapido, con tastierino numerico e tassi di cambio aggiornati.",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    },
+    {
+      "src": "icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "maskable"
+    }
+  ]
+}
