@@ -85,16 +85,35 @@ html, body {
     color: #666;
 }
 
-.code {
-    font-size: 1.3rem;
-    font-weight: 600;
-    color: #d8dee2;
+.code-col {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
     min-width: 52px;
     flex-shrink: 0;
 }
 
+.code {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #d8dee2;
+    line-height: 1.1;
+    margin-top: -3px;
+}
+
 .currency-row.active .code {
     color: #f0f0f0;
+}
+
+.local-time {
+    font-size: .65rem;
+    font-weight: 400;
+    color: #8ea0a8;
+    line-height: 1;
+}
+
+.currency-row.active .local-time {
+    color: #b9c9ce;
 }
 
 .amount-input {

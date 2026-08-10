@@ -1,3 +1,4 @@
+@implements IDisposable
 @inject AppStateService AppState
 
 <div class="currency-row @(IsActive ? "active" : "")">
@@ -5,7 +6,10 @@
         <img class="flag" src="flags/@(FlagCountry).svg" alt="" />
         <span class="caret">▾</span>
     </button>
-    <span class="code">@Slot.Code</span>
+    <div class="code-col">
+        <span class="code">@Slot.Code</span>
+        <span class="local-time">@LocalTime</span>
+    </div>
     <input class="amount-input"
            inputmode="none"
            readonly
@@ -20,11 +24,40 @@
     [Parameter]
     public EventCallback<int> OnFlagClick { get; set; }
 
+    private System.Threading.Timer? clockTimer;
+
     private CurrencySlot Slot => AppState.Slots[Index];
 
     private bool IsActive => AppState.ActiveIndex == Index;
 
     private string FlagCountry => CurrencyCatalog.Find(Slot.Code)?.FlagCountry ?? "xx";
 
+    private string LocalTime
+    {
+        get
+        {
+            var timeZoneId = CurrencyCatalog.Find(Slot.Code)?.TimeZoneId;
+            if (timeZoneId is null)
+                return "--:--";
+
+            try
+            {
+                var timeZone = TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
+                return TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, timeZone).ToString("HH:mm");
+            }
+            catch (TimeZoneNotFoundException)
+            {
+                return "--:--";
+            }
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        clockTimer = new System.Threading.Timer(_ => InvokeAsync(StateHasChanged), null, TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(10));
+    }
+
     private void Activate() => AppState.SetActive(Index);
+
+    public void Dispose() => clockTimer?.Dispose();
 }

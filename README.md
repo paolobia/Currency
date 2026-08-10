@@ -11,6 +11,7 @@ App **Blazor WebAssembly (.NET 8)**, 100% client-side — nessun backend, instal
 ## Funzionalità
 
 - 5 righe di valuta, tutte ricalcolate automaticamente quando si digita in una di esse.
+- Ora locale (formato 24h) del paese di riferimento sotto ogni codice valuta, aggiornata in tempo reale.
 - Tassi di cambio da [open.er-api.com](https://open.er-api.com) (base USD), aggiornabili col tasto ⟳.
 - Funziona offline con l'ultimo tasso scaricato (salvato in `localStorage`).
 - Tabellina di conversione 1-100, a due colonne fluide, con i multipli di 10 evidenziati.
