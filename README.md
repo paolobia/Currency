@@ -2,7 +2,7 @@
 
 🔗 **App live:** [paolobia.github.io/Currency](https://paolobia.github.io/Currency/)
 
-Convertitore di valute in tempo reale, pensato per l'uso da smartphone: 5 righe di valuta convertibili tra loro all'istante, tastierino numerico stile calcolatrice, tabellina di conversione 1-100 e selettore valuta con ricerca (150+ valute, bandiera reale per ciascuna).
+Convertitore di valute in tempo reale, pensato per l'uso da smartphone: 5 righe di valuta convertibili tra loro all'istante, tastierino numerico stile calcolatrice, tabellina di conversione 1-100, selettore valuta con ricerca (150+ valute, bandiera reale per ciascuna), ora locale e meteo del giorno per ogni valuta.
 
 App **Blazor WebAssembly (.NET 8)**, 100% client-side — nessun backend, installabile come **PWA** su Android, iOS e desktop.
 
@@ -12,6 +12,7 @@ App **Blazor WebAssembly (.NET 8)**, 100% client-side — nessun backend, instal
 
 - 5 righe di valuta, tutte ricalcolate automaticamente quando si digita in una di esse.
 - Ora locale (formato 24h) del paese di riferimento sotto ogni codice valuta, aggiornata in tempo reale.
+- Meteo del giorno (icona + temperatura minima/massima) per la città di riferimento di ogni valuta, da [Open-Meteo](https://open-meteo.com).
 - Tassi di cambio da [open.er-api.com](https://open.er-api.com) (base USD), aggiornabili col tasto ⟳.
 - Funziona offline con l'ultimo tasso scaricato (salvato in `localStorage`).
 - Tabellina di conversione 1-100, a due colonne fluide, con i multipli di 10 evidenziati.
