@@ -24,6 +24,9 @@ public sealed class AppStateService(
 
     public bool IsInitialized { get; private set; }
 
+    /// <summary>Vero quando il testo della riga attiva è un valore "ereditato" (seed iniziale, importo ricalcolato dopo un cambio riga/valuta) mai digitato dall'utente: la prossima cifra lo sostituisce invece di accodarsi.</summary>
+    private bool activeIsFreshEntry;
+
     public event Action? OnChange;
 
     private void NotifyChanged() => OnChange?.Invoke();
@@ -36,6 +39,7 @@ public sealed class AppStateService(
         ActiveIndex = 0;
         Slots[0].Amount = 1m;
         Slots[0].Text = "1";
+        activeIsFreshEntry = true;
         RecomputeOthers();
         IsInitialized = true;
         NotifyChanged();
@@ -69,21 +73,43 @@ public sealed class AppStateService(
 
         ActiveIndex = index;
         Slots[index].Text = NumberFormatter.ToEditable(Slots[index].Amount);
+        activeIsFreshEntry = true;
         NotifyChanged();
     }
 
-    public void AppendDigit(char digit) => SetActiveBuffer(Slots[ActiveIndex].Text + digit);
+    public void AppendDigit(char digit)
+    {
+        var baseText = activeIsFreshEntry ? "" : Slots[ActiveIndex].Text;
+        activeIsFreshEntry = false;
+        SetActiveBuffer(baseText + digit);
+    }
 
-    public void AppendComma() => SetActiveBuffer(Slots[ActiveIndex].Text + ",");
+    public void AppendComma()
+    {
+        var baseText = activeIsFreshEntry ? "" : Slots[ActiveIndex].Text;
+        activeIsFreshEntry = false;
+        SetActiveBuffer(baseText + ",");
+    }
 
     public void Backspace()
     {
+        if (activeIsFreshEntry)
+        {
+            activeIsFreshEntry = false;
+            SetActiveBuffer("");
+            return;
+        }
+
         var text = Slots[ActiveIndex].Text;
         if (text.Length > 0)
             SetActiveBuffer(text[..^1]);
     }
 
-    public void ClearActive() => SetActiveBuffer("");
+    public void ClearActive()
+    {
+        activeIsFreshEntry = false;
+        SetActiveBuffer("");
+    }
 
     private void SetActiveBuffer(string sanitizedRaw)
     {
@@ -99,6 +125,7 @@ public sealed class AppStateService(
         Slots[index].Code = code;
         if (index == ActiveIndex)
         {
+            activeIsFreshEntry = true;
             RecomputeOthers();
         }
         else
