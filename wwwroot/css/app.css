@@ -89,7 +89,15 @@ html, body {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    min-width: 64px;
+    min-width: 52px;
+    flex-shrink: 0;
+}
+
+.weather-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 34px;
     flex-shrink: 0;
 }
 

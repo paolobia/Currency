@@ -9,13 +9,15 @@
     </button>
     <div class="code-col">
         <span class="code">@Slot.Code</span>
-        @if (forecast is not null)
-        {
-            <span class="weather-icon">@WeatherService.IconFor(forecast.WeatherCode)</span>
-            <span class="weather-temp">@FormatTemp(forecast.TMin)/@FormatTemp(forecast.TMax)</span>
-        }
         <span class="local-time">@LocalTime</span>
     </div>
+    @if (forecast is not null)
+    {
+        <div class="weather-col">
+            <span class="weather-icon">@WeatherService.IconFor(forecast.WeatherCode)</span>
+            <span class="weather-temp">@FormatTemp(forecast.TMin)/@FormatTemp(forecast.TMax)</span>
+        </div>
+    }
     <input class="amount-input"
            inputmode="none"
            readonly
