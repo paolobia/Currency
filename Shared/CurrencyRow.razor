@@ -1,5 +1,6 @@
 @implements IDisposable
 @inject AppStateService AppState
+@inject WeatherService Weather
 
 <div class="currency-row @(IsActive ? "active" : "")">
     <button type="button" class="flag-btn" @onclick="() => OnFlagClick.InvokeAsync(Index)">
@@ -8,6 +9,11 @@
     </button>
     <div class="code-col">
         <span class="code">@Slot.Code</span>
+        @if (forecast is not null)
+        {
+            <span class="weather-icon">@WeatherService.IconFor(forecast.WeatherCode)</span>
+            <span class="weather-temp">@FormatTemp(forecast.TMin)/@FormatTemp(forecast.TMax)</span>
+        }
         <span class="local-time">@LocalTime</span>
     </div>
     <input class="amount-input"
@@ -25,6 +31,8 @@
     public EventCallback<int> OnFlagClick { get; set; }
 
     private System.Threading.Timer? clockTimer;
+    private WeatherForecast? forecast;
+    private string? weatherFetchedForCode;
 
     private CurrencySlot Slot => AppState.Slots[Index];
 
@@ -56,6 +64,32 @@
     {
         clockTimer = new System.Threading.Timer(_ => InvokeAsync(StateHasChanged), null, TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(10));
     }
+
+    protected override void OnParametersSet()
+    {
+        if (weatherFetchedForCode == Slot.Code)
+            return;
+
+        weatherFetchedForCode = Slot.Code;
+        forecast = null;
+        _ = LoadWeatherAsync(Slot.Code);
+    }
+
+    private async Task LoadWeatherAsync(string code)
+    {
+        var info = CurrencyCatalog.Find(code);
+        if (info is null)
+            return;
+
+        var result = await Weather.GetForecastAsync(info.Latitude, info.Longitude);
+        if (code != Slot.Code)
+            return; // la riga è cambiata di nuovo nel frattempo, risultato ormai obsoleto
+
+        forecast = result;
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private static string FormatTemp(double celsius) => $"{Math.Round(celsius):0}°";
 
     private void Activate() => AppState.SetActive(Index);
 
