@@ -25,7 +25,9 @@ public sealed class WeatherService(HttpClient http)
                       "&daily=weather_code,temperature_2m_max,temperature_2m_min" +
                       "&forecast_days=1&timezone=auto";
 
-            var json = await http.GetStringAsync(url, ct);
+            using var timeout = CancellationTokenSource.CreateLinkedTokenSource(ct);
+            timeout.CancelAfter(TimeSpan.FromSeconds(10));
+            var json = await http.GetStringAsync(url, timeout.Token);
             var dto = JsonSerializer.Deserialize(json, AppJsonContext.Default.OpenMeteoResponse);
             var daily = dto?.Daily;
             if (daily is null || daily.WeatherCode.Count == 0 || daily.TemperatureMin.Count == 0 || daily.TemperatureMax.Count == 0)

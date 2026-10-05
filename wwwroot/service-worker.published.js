@@ -16,7 +16,9 @@ async function onInstall(event) {
     const assetsRequests = self.assetsManifest.assets
         .filter(asset => offlineAssetsInclude.some(pattern => pattern.test(asset.url)))
         .filter(asset => !offlineAssetsExclude.some(pattern => pattern.test(asset.url)))
-        .map(asset => new Request(asset.url, { integrity: asset.hash, cache: 'no-cache' }));
+        // Niente `integrity`: il workflow di deploy riscrive <base href> in index.html dopo la publish,
+        // quindi l'hash nel manifest non corrisponde più e cache.addAll() fallirebbe (SW mai installato → niente offline).
+        .map(asset => new Request(asset.url, { cache: 'no-cache' }));
 
     await caches.open(cacheName).then(cache => cache.addAll(assetsRequests));
 }
@@ -41,7 +43,15 @@ async function onFetch(event) {
         cachedResponse = await cache.match(request);
     }
 
-    return cachedResponse || fetch(event.request);
+    if (cachedResponse)
+        return cachedResponse;
+
+    try {
+        return await fetch(event.request);
+    } catch {
+        // Offline: risposta d'errore pulita invece di una promise rifiutata (l'app gestisce già il fallimento).
+        return new Response('', { status: 503, statusText: 'Offline' });
+    }
 }
 
 self.addEventListener('install', event => event.waitUntil(onInstall(event)));

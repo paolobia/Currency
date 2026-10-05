@@ -12,7 +12,9 @@ public sealed class ExchangeRateService(HttpClient http)
     {
         try
         {
-            var json = await http.GetStringAsync(ApiUrl, ct);
+            using var timeout = CancellationTokenSource.CreateLinkedTokenSource(ct);
+            timeout.CancelAfter(TimeSpan.FromSeconds(10));
+            var json = await http.GetStringAsync(ApiUrl, timeout.Token);
             var dto = JsonSerializer.Deserialize(json, AppJsonContext.Default.OpenErApiResponse);
             if (dto is null || dto.Result != "success" || dto.Rates.Count == 0)
                 return null;

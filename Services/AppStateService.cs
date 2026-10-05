@@ -44,7 +44,8 @@ public sealed class AppStateService(
         IsInitialized = true;
         NotifyChanged();
 
-        await RefreshRatesAsync();
+        // Non si attende il fetch: offline (o con rete lenta) l'app deve partire subito con l'ultimo snapshot salvato.
+        _ = RefreshRatesAsync();
     }
 
     public async Task RefreshRatesAsync()
